@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Product } from '../entity/product.entity';
+import { CreateProductDTO } from '../dto/product.dto';
 
 @Injectable()
 export class ProductService {
@@ -29,12 +30,13 @@ export class ProductService {
     findById(id: number) {
         const product = this.products.find(product => product.id === id);
         if (!product) {
-            throw new NotFoundException("Product Not Exist.");
+            throw new NotFoundException("Product Not Available.");
         }
         return product;
     }
 
-    create(payload: any) {
+    create(payload: CreateProductDTO) {
+        console.log(payload);
         let idArray = this.products.map(product => {
             return product.id;
         });
@@ -42,10 +44,10 @@ export class ProductService {
         const newProduct: Product = {
             id: newId,
             name: payload.name,
-            description: "The same description added.",
+            description: (!payload.description) ? "" : payload.description,
             price: payload.price,
             stock: payload.stock,
-            image: "",
+            image: (!payload.image) ? "" : payload.image,
         };
         this.products.push(newProduct);
         return newProduct;

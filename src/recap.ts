@@ -1,3 +1,5 @@
+const nombre: string = 'Jesus Plasencia Toledo';
+
 class Persona {
   constructor(private age: number, private name: string) { }
 

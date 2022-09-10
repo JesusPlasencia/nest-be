@@ -9,9 +9,10 @@ import {
     Delete,
     HttpStatus,
     HttpCode,
-    ParseIntPipe
+    ParseIntPipe,
 } from '@nestjs/common';
 import { ProductService } from "../service/product.service";
+import { CreateProductDTO, UpdateProductDTO } from '../dto/product.dto';
 
 @Controller('products')
 export class ProductController {
@@ -20,11 +21,7 @@ export class ProductController {
 
     @Get()
     @HttpCode(HttpStatus.OK)
-    get(
-        @Query('limit') limit = 10,
-        @Query('offset') offset = 0,
-        @Query('brand') brand: string,
-    ) {
+    get() {
         return this.productService.findAll();
     }
 
@@ -44,13 +41,13 @@ export class ProductController {
 
     @Post()
     @HttpCode(HttpStatus.CREATED)
-    create(@Body() payload: any) {
+    create(@Body() payload: CreateProductDTO) {
         return this.productService.create(payload);
     }
 
     @Put('/:id')
     @HttpCode(HttpStatus.ACCEPTED)
-    update(@Body() payload: any, @Param('id', ParseIntPipe) id: number) {
+    update(@Body() payload: UpdateProductDTO, @Param('id', ParseIntPipe) id: number) {
         return this.productService.update(id, payload);
     }
 
