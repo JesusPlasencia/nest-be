@@ -1,22 +1,35 @@
-import { Controller, Get, Query, Param, Post, Body, Put, Delete, HttpStatus, HttpCode } from '@nestjs/common';
+import {
+    Controller,
+    Get,
+    Query,
+    Param,
+    Post,
+    Body,
+    Put,
+    Delete,
+    HttpStatus,
+    HttpCode,
+    ParseIntPipe
+} from '@nestjs/common';
+import { ProductService } from "../service/product.service";
 
 @Controller('products')
 export class ProductController {
 
+    constructor(private productService: ProductService) { }
+
     @Get()
-    @HttpCode(200)
+    @HttpCode(HttpStatus.OK)
     get(
         @Query('limit') limit = 10,
         @Query('offset') offset = 0,
         @Query('brand') brand: string,
     ) {
-        return {
-            message: `products with limit: ${limit}, offset: ${offset} and brand: ${brand}.`
-        }
+        return this.productService.findAll();
     }
 
     @Get('/filter')
-    @HttpCode(200)
+    @HttpCode(HttpStatus.OK)
     getByFilter() {
         return {
             message: `Product filtered.`
@@ -24,36 +37,26 @@ export class ProductController {
     }
 
     @Get('/:id')
-    @HttpCode(200)
-    getById(@Param('id') id: any) {
-        return {
-            message: `Product with id: ${id}`
-        }
+    @HttpCode(HttpStatus.OK)
+    getById(@Param('id', ParseIntPipe) id: number) {
+        return this.productService.findById(id);
     }
 
     @Post()
-    @HttpCode(201)
+    @HttpCode(HttpStatus.CREATED)
     create(@Body() payload: any) {
-        return {
-            message: "Created -> Product with id: 1001.",
-            payload,
-        }
+        return this.productService.create(payload);
     }
 
     @Put('/:id')
-    @HttpCode(200)
-    update(@Body() payload: any, @Param('id') id: number) {
-        return {
-            message: `Updated -> Product with id: ${id}.`,
-            payload,
-        }
+    @HttpCode(HttpStatus.ACCEPTED)
+    update(@Body() payload: any, @Param('id', ParseIntPipe) id: number) {
+        return this.productService.update(id, payload);
     }
 
     @Delete('/:id')
-    @HttpCode(200)
-    remove(@Param('id') id: number) {
-        return {
-            message: `Deleted -> Product with id: ${id}.`,
-        }
+    @HttpCode(HttpStatus.OK)
+    remove(@Param('id', ParseIntPipe) id: number) {
+        return this.productService.delete(id);
     }
 }
