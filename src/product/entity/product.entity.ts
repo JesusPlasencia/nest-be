@@ -5,4 +5,7 @@ export class Product {
     price: number;
     stock: number;
     image: string;
+    state: boolean;
+    created: Date;
+    modified: Date;
 }
