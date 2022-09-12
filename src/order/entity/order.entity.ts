@@ -5,8 +5,6 @@ export class Order {
     id: number;
     user: User;
     address: string;
-
-    total: number;
     delivery: Date;
     state: boolean;
     created: Date;

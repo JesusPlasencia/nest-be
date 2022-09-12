@@ -1,3 +1,4 @@
+import { HttpModule, HttpService } from "@nestjs/axios"
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
@@ -11,10 +12,21 @@ import { CustomerModule } from './customer/module/customer.module';
 import { OrderModule } from './order/module/order.module';
 import { ItemModule } from './item/module/item.module';
 import { RoleModule } from './role/module/role.module';
+import { SummaryModule } from './summary/module/summary.module';
+import { DatabaseModule } from './database/module/database.module';
 
 @Module({
-  imports: [ProductModule, CategoryModule, SubcategoryModule, BrandModule, CommentModule, UserModule, CustomerModule, OrderModule, ItemModule, RoleModule],
+  imports: [HttpModule, ProductModule, CategoryModule, SubcategoryModule, BrandModule, CommentModule, UserModule, CustomerModule, OrderModule, ItemModule, RoleModule, SummaryModule, DatabaseModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: 'TASKS',
+      useFactory: async (http: HttpService) => {
+        const tasks = (await http.axiosRef.get('https://jsonplaceholder.typicode.com/todos')).data;
+        return tasks;
+      },
+      inject: [HttpService]
+    }
+  ],
 })
 export class AppModule { }

@@ -12,6 +12,9 @@ export class ProductService {
             price: 166.00,
             stock: 0,
             image: "",
+            state: true,
+            created: new Date(),
+            modified: new Date()
         },
         {
             id: 2,
@@ -19,7 +22,10 @@ export class ProductService {
             description: "The same description.",
             price: 240.00,
             stock: 10,
-            image: ""
+            image: "",
+            state: true,
+            created: new Date(),
+            modified: new Date()
         }
     ];
 
@@ -48,6 +54,9 @@ export class ProductService {
             price: payload.price,
             stock: payload.stock,
             image: (!payload.image) ? "" : payload.image,
+            state: true,
+            created: new Date(),
+            modified: new Date()
         };
         this.products.push(newProduct);
         return newProduct;
