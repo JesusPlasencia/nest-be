@@ -20,9 +20,4 @@ export class AppController {
     return 'Deprecated Endpoint...';
   }
 
-
-
-
-
-
 }
