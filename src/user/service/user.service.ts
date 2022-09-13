@@ -1,113 +1,110 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Order } from 'src/order/entity/order.entity';
-import { CreateUserDTO } from '../dto/user.dto';
-import { User } from '../entity/user.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { Order } from "src/order/entity/order.entity";
+import { CreateUserDTO } from "../dto/user.dto";
+import { User } from "../entity/user.entity";
 
 @Injectable()
 export class UserService {
+  constructor(private configService: ConfigService) {}
 
-    constructor(
-        private configService: ConfigService,
-    ) { }
+  private users: User[] = [
+    {
+      id: 1,
+      username: "hs-wmsugar-10",
+      password: "harrypassword",
+      state: true,
+      created: new Date(),
+      modified: new Date(),
+    },
+    {
+      id: 2,
+      username: "ts-red-13",
+      password: "passwordversion",
+      state: true,
+      created: new Date(),
+      modified: new Date(),
+    },
+  ];
 
-    private users: User[] = [
-        {
-            id: 1,
-            username: "hs-wmsugar-10",
-            password: "harrypassword",
-            state: true,
-            created: new Date(),
-            modified: new Date()
-        },
-        {
-            id: 2,
-            username: "ts-red-13",
-            password: "passwordversion",
-            state: true,
-            created: new Date(),
-            modified: new Date()
-        }
+  findAll(): User[] {
+    const apiKey = this.configService.get("API_KEY");
+    const databaseName = this.configService.get("DATABASE_NAME");
+    console.log(apiKey);
+    console.log(databaseName);
+    return this.users;
+  }
+
+  findById(id: number): User {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) {
+      throw new NotFoundException("User Not Found.");
+    }
+    return user;
+  }
+
+  findOrdersById(id: number): Order[] {
+    const user = this.findById(id);
+    return [
+      {
+        id: 1,
+        user,
+        address: "Av. ABC 160",
+        delivery: new Date(2022, 8, 25),
+        state: true,
+        created: new Date(2022, 8, 15),
+        modified: new Date(2022, 8, 17),
+      },
+      {
+        id: 2,
+        user: user,
+        address: "Av. ABC 160",
+        delivery: new Date(2022, 9, 11),
+        state: true,
+        created: new Date(2022, 9, 1),
+        modified: new Date(2022, 9, 1),
+      },
     ];
+  }
 
-    findAll(): User[] {
-        const apiKey = this.configService.get('API_KEY');
-        const databaseName = this.configService.get('DATABASE_NAME');
-        console.log(apiKey);
-        console.log(databaseName);
-        return this.users;
-    }
+  create(payload: CreateUserDTO): User {
+    console.log(payload);
+    let idArray = this.users.map((user) => {
+      return user.id;
+    });
+    let newId = Math.max(...idArray) + 1;
+    const newUser: User = {
+      id: newId,
+      username: payload.username,
+      password: payload.password,
+      state: true,
+      created: new Date(),
+      modified: new Date(),
+    };
+    this.users.push(newUser);
+    return newUser;
+  }
 
-    findById(id: number): User {
-        const user = this.users.find(user => user.id === id);
-        if (!user) {
-            throw new NotFoundException("User Not Found.");
-        }
-        return user;
+  update(id: number, payload: any): User {
+    let foundUser = this.findById(id);
+    if (foundUser) {
+      let index = this.users.findIndex((user) => user.id === id);
+      this.users[index] = {
+        ...foundUser,
+        ...payload,
+        modified: new Date(),
+      };
+      return this.users[index];
     }
+    return null;
+  }
 
-    findOrdersById(id: number): Order[] {
-        const user = this.findById(id);
-        return ([
-            {
-                id: 1,
-                user,
-                address: "Av. ABC 160",
-                delivery: new Date(2022, 8, 25),
-                state: true,
-                created: new Date(2022, 8, 15),
-                modified: new Date(2022, 8, 17)
-            },
-            {
-                id: 2,
-                user: user,
-                address: "Av. ABC 160",
-                delivery: new Date(2022, 9, 11),
-                state: true,
-                created: new Date(2022, 9, 1),
-                modified: new Date(2022, 9, 1)
-            }
-        ])
+  delete(id: number): User {
+    let foundUser = this.findById(id);
+    if (foundUser) {
+      this.users = this.users.filter((user) => user.id !== id);
+      return foundUser;
     }
-
-    create(payload: CreateUserDTO): User {
-        console.log(payload);
-        let idArray = this.users.map(user => {
-            return user.id;
-        });
-        let newId = Math.max(...idArray) + 1;
-        const newUser: User = {
-            id: newId,
-            username: payload.username,
-            password: payload.password,
-            state: true,
-            created: new Date(),
-            modified: new Date()
-        };
-        this.users.push(newUser);
-        return newUser;
-    }
-
-    update(id: number, payload: any): User {
-        let foundUser = this.findById(id);
-        if (foundUser) {
-            let index = this.users.findIndex(user => user.id === id);
-            this.users[index] = {
-                ...foundUser,
-                ...payload,
-                modified: new Date()
-            };
-            return this.users[index];
-        }
-        return null;
-    }
-
-    delete(id: number): User {
-        let foundUser = this.findById(id);
-        if (foundUser) {
-            this.users = this.users.filter(user => user.id !== id);
-            return foundUser;
-        }
-        return null;
-    }
+    return null;
+  }
 }

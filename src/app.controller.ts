@@ -1,23 +1,22 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Param, Query } from "@nestjs/common";
+import { AppService } from "./app.service";
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly appService: AppService) {}
 
   @Get()
   getHello(): string {
     return this.appService.getHello();
   }
 
-  @Get('new')
+  @Get("new")
   newEndpoint(): string {
-    return 'I\'m brand new...';
+    return "I'm brand new...";
   }
 
-  @Get('/old/')
+  @Get("/old/")
   oldEndpoint(): string {
-    return 'Deprecated Endpoint...';
+    return "Deprecated Endpoint...";
   }
-
 }

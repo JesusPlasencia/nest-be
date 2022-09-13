@@ -1,15 +1,15 @@
-import { Module, Global } from '@nestjs/common';
+import { Module, Global } from "@nestjs/common";
 
-const API_KEY = '1245354';
+const API_KEY = "1245354";
 
 @Global()
 @Module({
-    providers: [
-        {
-            provide: 'API_KEY',
-            useValue: API_KEY
-        },
-    ],
-    exports: ['API_KEY']
+  providers: [
+    {
+      provide: "API_KEY",
+      useValue: API_KEY,
+    },
+  ],
+  exports: ["API_KEY"],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

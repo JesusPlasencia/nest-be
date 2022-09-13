@@ -1,61 +1,63 @@
 import {
-    Controller,
-    Get,
-    Query,
-    Param,
-    Post,
-    Body,
-    Put,
-    Delete,
-    HttpStatus,
-    HttpCode,
-    ParseIntPipe,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+  Controller,
+  Get,
+  Query,
+  Param,
+  Post,
+  Body,
+  Put,
+  Delete,
+  HttpStatus,
+  HttpCode,
+  ParseIntPipe,
+} from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { ProductService } from "../service/product.service";
-import { CreateProductDTO, UpdateProductDTO } from '../dto/product.dto';
+import { CreateProductDTO, UpdateProductDTO } from "../dto/product.dto";
 
-@ApiTags('products')
-@Controller('products')
+@ApiTags("products")
+@Controller("products")
 export class ProductController {
+  constructor(private productService: ProductService) {}
 
-    constructor(private productService: ProductService) { }
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  get() {
+    return this.productService.findAll();
+  }
 
-    @Get()
-    @HttpCode(HttpStatus.OK)
-    get() {
-        return this.productService.findAll();
-    }
+  @Get("/filter")
+  @HttpCode(HttpStatus.OK)
+  getByFilter() {
+    return {
+      message: `Product filtered.`,
+    };
+  }
 
-    @Get('/filter')
-    @HttpCode(HttpStatus.OK)
-    getByFilter() {
-        return {
-            message: `Product filtered.`
-        }
-    }
+  @Get("/:id")
+  @HttpCode(HttpStatus.OK)
+  getById(@Param("id", ParseIntPipe) id: number) {
+    return this.productService.findById(id);
+  }
 
-    @Get('/:id')
-    @HttpCode(HttpStatus.OK)
-    getById(@Param('id', ParseIntPipe) id: number) {
-        return this.productService.findById(id);
-    }
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() payload: CreateProductDTO) {
+    return this.productService.create(payload);
+  }
 
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    create(@Body() payload: CreateProductDTO) {
-        return this.productService.create(payload);
-    }
+  @Put("/:id")
+  @HttpCode(HttpStatus.ACCEPTED)
+  update(
+    @Body() payload: UpdateProductDTO,
+    @Param("id", ParseIntPipe) id: number
+  ) {
+    return this.productService.update(id, payload);
+  }
 
-    @Put('/:id')
-    @HttpCode(HttpStatus.ACCEPTED)
-    update(@Body() payload: UpdateProductDTO, @Param('id', ParseIntPipe) id: number) {
-        return this.productService.update(id, payload);
-    }
-
-    @Delete('/:id')
-    @HttpCode(HttpStatus.OK)
-    remove(@Param('id', ParseIntPipe) id: number) {
-        return this.productService.delete(id);
-    }
+  @Delete("/:id")
+  @HttpCode(HttpStatus.OK)
+  remove(@Param("id", ParseIntPipe) id: number) {
+    return this.productService.delete(id);
+  }
 }
