@@ -11,9 +11,11 @@ import {
     HttpCode,
     ParseIntPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ProductService } from "../service/product.service";
 import { CreateProductDTO, UpdateProductDTO } from '../dto/product.dto';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductController {
 

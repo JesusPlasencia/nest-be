@@ -1,16 +1,19 @@
 import { IsString, IsNumber, IsUrl, IsNotEmpty, IsPositive, Min, Max, IsInt, IsDecimal } from 'class-validator';
-import { PartialType } from '@nestjs/mapped-types'
+import { PartialType, ApiProperty } from '@nestjs/swagger'
 
 export class CreateProductDTO {
 
+    @ApiProperty()
     @IsString()
     @IsNotEmpty()
     readonly name: string;
 
+    @ApiProperty()
     @IsString()
     @IsNotEmpty()
     readonly description: string;
 
+    @ApiProperty()
     @IsNumber()
     @IsNotEmpty()
     @IsPositive()
@@ -18,6 +21,7 @@ export class CreateProductDTO {
     @Max(99999)
     readonly price: number;
 
+    @ApiProperty()
     @IsNumber()
     @IsInt()
     @IsNotEmpty()
@@ -26,6 +30,7 @@ export class CreateProductDTO {
     @Max(99999)
     readonly stock: number;
 
+    @ApiProperty()
     @IsUrl()
     @IsNotEmpty()
     readonly image: string;

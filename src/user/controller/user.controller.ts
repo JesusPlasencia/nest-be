@@ -10,9 +10,11 @@ import {
     ParseIntPipe,
     Body
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CreateUserDTO, UpdateUserDTO } from '../dto/user.dto';
 import { UserService } from '../service/user.service';
 
+@ApiTags('users')
 @Controller('users')
 export class UserController {
 
