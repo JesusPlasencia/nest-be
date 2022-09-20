@@ -7,9 +7,13 @@ import {
   Min,
   Max,
   IsInt,
-  IsDecimal,
+  IsOptional,
+  ValidateIf,
+  ValidateNested
 } from "class-validator";
 import { PartialType, ApiProperty } from "@nestjs/swagger";
+import { CreateSubcategoryDTO } from "src/subcategory/dto/subcategory.dto";
+
 
 export class CreateProductDTO {
   @ApiProperty()
@@ -43,6 +47,29 @@ export class CreateProductDTO {
   @IsUrl()
   @IsNotEmpty()
   readonly image: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @ValidateNested()
+  readonly subcategory: CreateSubcategoryDTO;
 }
 
-export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
+export class UpdateProductDTO extends PartialType(CreateProductDTO) { }
+
+export class FilterProductDTO {
+  @IsOptional()
+  @IsPositive()
+  limit: number;
+
+  @IsOptional()
+  @Min(0)
+  offset: number;
+
+  @IsOptional()
+  @Min(0)
+  minPrice: number;
+
+  @ValidateIf(param => param.minPrice)
+  @IsPositive()
+  maxPrice: number;
+}

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Product } from "../entity/product.entity";
-import { CreateProductDTO, UpdateProductDTO } from "../dto/product.dto";
-import { Model } from 'mongoose'
+import { CreateProductDTO, FilterProductDTO, UpdateProductDTO } from "../dto/product.dto";
+import { FilterQuery, Model } from 'mongoose'
 import { InjectModel } from "@nestjs/mongoose";
 import { MongoIdPipe } from "src/common/mongo-id/mongo-id.pipe";
 
@@ -10,16 +10,24 @@ export class ProductService {
 
   constructor(@InjectModel(Product.name) private productModel: Model<Product>) { }
 
-  findAll() {
-    return this.productModel.find();
+  async findAll(params: FilterProductDTO) {
+    if (params) {
+      const filters: FilterQuery<Product> = {};
+      const { limit, offset } = params;
+      const { minPrice, maxPrice } = params;
+
+      if (minPrice && maxPrice) {
+        filters.price = { $gte: minPrice, $lte: maxPrice }
+      }
+
+      return await this.productModel.find(filters).skip(offset).limit(limit).exec();
+    }
+    return this.productModel.find().exec();
   }
 
-  async findAllCustom() {
-    const products = await this.findAll();
-    console.log(products);
-    console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  async findAllCustom(params: FilterProductDTO) {
+    const products = await this.findAll(params);
     const ables = products.filter(function (p) { return (p.state === true) });
-    console.log(ables);
     return ables;
   }
 
