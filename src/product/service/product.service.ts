@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Product } from "../entity/product.entity";
-import { CreateProductDTO } from "../dto/product.dto";
+import { CreateProductDTO, UpdateProductDTO } from "../dto/product.dto";
 import { Model } from 'mongoose'
 import { InjectModel } from "@nestjs/mongoose";
+import { MongoIdPipe } from "src/common/mongo-id/mongo-id.pipe";
 
 @Injectable()
 export class ProductService {
@@ -13,7 +14,16 @@ export class ProductService {
     return this.productModel.find();
   }
 
-  async findById(id: number) {
+  async findAllCustom() {
+    const products = await this.findAll();
+    console.log(products);
+    console.log("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    const ables = products.filter(function (p) { return (p.state === true) });
+    console.log(ables);
+    return ables;
+  }
+
+  async findById(id: string) {
     const product = await this.productModel.findById(id);
     if (!product) {
       throw new NotFoundException("Product Not Available.");
@@ -21,46 +31,22 @@ export class ProductService {
     return product;
   }
 
-  // create(payload: CreateProductDTO) {
-  //   console.log(payload);
-  //   let idArray = this.products.map((product) => {
-  //     return product.id;
-  //   });
-  //   let newId = Math.max(...idArray) + 1;
-  //   const newProduct: Product = {
-  //     id: newId,
-  //     name: payload.name,
-  //     description: !payload.description ? "" : payload.description,
-  //     price: payload.price,
-  //     stock: payload.stock,
-  //     image: !payload.image ? "" : payload.image,
-  //     state: true,
-  //     created: new Date(),
-  //     modified: new Date(),
-  //   };
-  //   this.products.push(newProduct);
-  //   return newProduct;
-  // }
+  create(data: CreateProductDTO) {
+    const newProduct = new this.productModel(data);
+    return newProduct.save();
+  }
 
-  // update(id: number, payload: any) {
-  //   let foundProduct = this.findById(id);
-  //   if (foundProduct) {
-  //     let index = this.products.findIndex((product) => product.id === id);
-  //     this.products[index] = {
-  //       ...foundProduct,
-  //       ...payload,
-  //     };
-  //     return this.products[index];
-  //   }
-  //   return null;
-  // }
+  update(id: string, changes: UpdateProductDTO) {
+    const product = this.productModel.findByIdAndUpdate(id, { $set: changes }, { new: true })
+      .exec();
+    if (!product) {
+      throw new NotFoundException(`Product #${id} not Found.`);
+    }
+    return product;
+  }
 
-  // delete(id: number) {
-  //   let foundProduct = this.findById(id);
-  //   if (foundProduct) {
-  //     this.products = this.products.filter((item) => item.id !== id);
-  //     return foundProduct;
-  //   }
-  //   return null;
-  // }
+  delete(id: string) {
+    const product = this.productModel.findByIdAndUpdate(id, { state: false }, { new: true }).exec();
+    return product;
+  }
 }
