@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
+import { Brand } from '../../brand/entity/brand.entity'
+import { Subcategory } from 'src/subcategory/entity/subcategory.entity';
 
 @Schema()
 export class Product extends Document {
@@ -27,10 +29,11 @@ export class Product extends Document {
   @Prop({ type: Date, default: new Date(), required: false })
   modified: Date;
 
-  @Prop(raw({
-    name: { type: String }
-  }))
-  subcategory: Record<string, any>;
+  @Prop({ type: Types.ObjectId, ref: Subcategory.name })
+  subcategory: Subcategory | Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: Brand.name })
+  brand: Brand | Types.ObjectId;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

@@ -8,7 +8,8 @@ import {
     Max,
     IsInt,
     IsOptional,
-    ValidateIf
+    ValidateIf,
+    IsMongoId
 } from "class-validator";
 import { PartialType, ApiProperty } from "@nestjs/swagger";
 
@@ -17,6 +18,11 @@ export class CreateSubcategoryDTO {
     @IsString()
     @IsNotEmpty()
     readonly name: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsMongoId()
+    readonly category: string;
 }
 
 export class UpdateSubcategoryDTO extends PartialType(CreateSubcategoryDTO) { }
