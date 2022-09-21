@@ -3,7 +3,7 @@ import { Product } from "../entity/product.entity";
 import { CreateProductDTO, FilterProductDTO, UpdateProductDTO } from "../dto/product.dto";
 import { FilterQuery, Model } from 'mongoose'
 import { InjectModel } from "@nestjs/mongoose";
-import { MongoIdPipe } from "src/common/mongo-id/mongo-id.pipe";
+// import { MongoIdPipe } from "src/common/mongo-id/mongo-id.pipe";
 
 @Injectable()
 export class ProductService {
@@ -20,9 +20,9 @@ export class ProductService {
         filters.price = { $gte: minPrice, $lte: maxPrice }
       }
 
-      return await this.productModel.find(filters).skip(offset).limit(limit).exec();
+      return await this.productModel.find(filters).populate(['subcategory', 'brand']).skip(offset).limit(limit).exec();
     }
-    return this.productModel.find().exec();
+    return this.productModel.find().populate(['subcategory', 'brand']).exec();
   }
 
   async findAllCustom(params: FilterProductDTO) {

@@ -11,13 +11,14 @@ import {
   Body,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import { MongoIdPipe } from "src/common/mongo-id/mongo-id.pipe";
 import { CreateUserDTO, UpdateUserDTO } from "../dto/user.dto";
 import { UserService } from "../service/user.service";
 
 @ApiTags("users")
 @Controller("users")
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   @Get()
   @HttpCode(HttpStatus.OK)
@@ -25,24 +26,16 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get("/filter")
+  @Get("/custom")
   @HttpCode(HttpStatus.OK)
   getByFilter() {
-    return {
-      message: `User filtered.`,
-    };
+    return this.userService.findAllCustom();
   }
 
   @Get("/:id")
   @HttpCode(HttpStatus.OK)
-  getById(@Param("id", ParseIntPipe) id: number) {
+  getById(@Param("id", MongoIdPipe) id: string) {
     return this.userService.findById(id);
-  }
-
-  @Get("/:id/orders")
-  @HttpCode(HttpStatus.OK)
-  getOrdersById(@Param("id", ParseIntPipe) id: number) {
-    return this.userService.findOrdersById(id);
   }
 
   @Post()
@@ -55,14 +48,14 @@ export class UserController {
   @HttpCode(HttpStatus.ACCEPTED)
   update(
     @Body() payload: UpdateUserDTO,
-    @Param("id", ParseIntPipe) id: number
+    @Param("id", ParseIntPipe) id: string
   ) {
     return this.userService.update(id, payload);
   }
 
   @Delete("/:id")
   @HttpCode(HttpStatus.OK)
-  remove(@Param("id", ParseIntPipe) id: number) {
+  remove(@Param("id", MongoIdPipe) id: string) {
     return this.userService.delete(id);
   }
 }

@@ -10,11 +10,11 @@ export class SubcategoryService {
     constructor(@InjectModel(Subcategory.name) private subcategoryModel: Model<Subcategory>) { }
 
     async findAll() {
-        return this.subcategoryModel.find().exec();
+        return this.subcategoryModel.find().populate('category').exec();
     }
 
     async findById(id: string) {
-        const subcategory = await this.subcategoryModel.findById(id);
+        const subcategory = await this.subcategoryModel.findById(id).populate('category');
         if (!subcategory) {
             throw new NotFoundException("Subcategory Not Available.");
         }
