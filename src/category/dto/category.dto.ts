@@ -21,7 +21,7 @@ export class CreateCategoryDTO {
     @ApiProperty()
     @IsUrl()
     @IsNotEmpty()
-    readonly image: string;
+    readonly icon: string;
 }
 
 export class UpdateCategoryDTO extends PartialType(CreateCategoryDTO) { }
