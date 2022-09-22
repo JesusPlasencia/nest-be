@@ -1,12 +1,24 @@
-import { Order } from "src/order/entity/order.entity";
-import { Product } from "src/product/entity/product.entity";
+import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
+import { Document, Types } from 'mongoose';
+import { Product } from 'src/product/entity/product.entity';
 
-export class Item {
-  id: number;
-  order: Order;
-  product: Product;
+@Schema()
+export class Item extends Document {
+
+  @Prop({ type: Product, required: true })
+  product: Product | Types.ObjectId;
+
+  @Prop({ required: true })
   quantity: number;
+
+  @Prop({ required: true })
   amount: number;
+
+  @Prop({ type: Date, default: new Date(), required: true })
   created: Date;
+
+  @Prop({ type: Date, default: new Date(), required: true })
   modified: Date;
 }
+
+export const ItemSchema = SchemaFactory.createForClass(Item);

@@ -9,11 +9,9 @@ import {
   IsInt,
   IsOptional,
   ValidateIf,
-  ValidateNested,
   IsMongoId
 } from "class-validator";
 import { PartialType, ApiProperty } from "@nestjs/swagger";
-//import { CreateSubcategoryDTO } from "src/subcategory/dto/subcategory.dto";
 
 
 export class CreateProductDTO {
@@ -49,16 +47,13 @@ export class CreateProductDTO {
   @IsNotEmpty()
   readonly image: string;
 
-  // @ApiProperty()
-  // @IsNotEmpty()
-  // @ValidateNested()
-  // readonly subcategory: CreateSubcategoryDTO;
   @ApiProperty()
   @IsNotEmpty()
   @IsMongoId()
   readonly subcategory: string;
 
   @ApiProperty()
+  @IsNotEmpty()
   @IsMongoId()
   readonly brand: string;
 }
