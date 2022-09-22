@@ -27,13 +27,18 @@ export class CreateOrderDTO {
     @ApiProperty()
     @IsNotEmpty()
     @IsArray()
-    readonly products: string[];
+    readonly items: string[];
+
+    @ApiProperty()
+    @IsNotEmpty()
+    @IsMongoId()
+    readonly summary: string;
 }
 
 export class UpdateOrderDTO extends PartialType(CreateOrderDTO) { }
 
-export class AddProductsToOrderDTO {
+export class AddItemsToOrderDTO {
     @IsArray()
     @IsNotEmpty()
-    readonly productIds: string[];
+    readonly itemIds: string[];
 }

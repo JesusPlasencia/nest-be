@@ -8,12 +8,11 @@ import {
     Delete,
     HttpStatus,
     HttpCode,
-    Query,
 } from "@nestjs/common";
 import { MongoIdPipe } from "src/common/mongo-id/mongo-id.pipe";
 import { ApiTags } from "@nestjs/swagger";
 import { OrderService } from "../service/order.service";
-import { CreateOrderDTO, UpdateOrderDTO, AddProductsToOrderDTO } from "../dto/order.dto";
+import { CreateOrderDTO, UpdateOrderDTO } from "../dto/order.dto";
 
 @ApiTags("orders")
 @Controller("orders")
@@ -53,14 +52,14 @@ export class OrderController {
         return this.orderService.update(id, payload);
     }
 
-    @Put("/:id/products")
-    @HttpCode(HttpStatus.ACCEPTED)
-    updateProducts(
-        @Body() payload: AddProductsToOrderDTO,
-        @Param("id", MongoIdPipe) id: string
-    ) {
-        return this.orderService.addProduct(id, payload.productIds);
-    }
+    // @Put("/:id/products")
+    // @HttpCode(HttpStatus.ACCEPTED)
+    // updateProducts(
+    //     @Body() payload: AddItemsToOrderDTO,
+    //     @Param("id", MongoIdPipe) id: string
+    // ) {
+    //     return this.orderService.addItem(id, payload.itemIds);
+    // }
 
     @Delete("/:id")
     @HttpCode(HttpStatus.OK)
@@ -68,9 +67,11 @@ export class OrderController {
         return this.orderService.delete(id);
     }
 
-    @Delete("/:id/product/:productId")
-    @HttpCode(HttpStatus.OK)
-    removeProduct(@Param("id", MongoIdPipe) id: string, @Param("productId", MongoIdPipe) productId: string) {
-        return this.orderService.removeProduct(id, productId);
-    }
+    // @Delete("/:id/item/:productId")
+    // @HttpCode(HttpStatus.OK)
+    // removeItem(
+    //     @Param("id", MongoIdPipe) id: string,
+    //     @Param("productId", MongoIdPipe) itemId: string) {
+    //     return this.orderService.removeItem(id, itemId);
+    // }
 }

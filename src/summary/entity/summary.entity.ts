@@ -8,9 +8,6 @@ export class Summary extends Document {
     subtotal: number;
 
     @Prop({ required: true })
-    discount: number;
-
-    @Prop({ required: true })
     igv: number;
 
     @Prop({ required: true })
