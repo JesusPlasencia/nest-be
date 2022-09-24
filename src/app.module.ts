@@ -18,6 +18,7 @@ import { RoleModule } from "./role/module/role.module";
 import { SummaryModule } from "./summary/module/summary.module";
 import { DatabaseModule } from "./database/module/database.module";
 import { environments } from "./environment";
+import { AuthModule } from './auth/module/auth.module';
 import config from "./config";
 
 @Module({
@@ -27,7 +28,7 @@ import config from "./config";
       load: [config],
       isGlobal: true,
       validationSchema: Joi.object({
-        API_KEY: Joi.number().required(),
+        API_KEY: Joi.string().required(),
         DATABASE_NAME: Joi.string().required(),
         DATABASE_PORT: Joi.number().required(),
       }),
@@ -45,6 +46,7 @@ import config from "./config";
     RoleModule,
     SummaryModule,
     DatabaseModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

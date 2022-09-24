@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { MongoIdPipe } from "src/common/mongo-id/mongo-id.pipe";
-import { CreateUserDTO, UpdateUserDTO } from "../dto/user.dto";
+import { CreateUserDTO, EmailDTO, UpdateUserDTO } from "../dto/user.dto";
 import { UserService } from "../service/user.service";
 
 @ApiTags("users")
@@ -30,6 +30,12 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   getByFilter() {
     return this.userService.findAllCustom();
+  }
+
+  @Get("/email")
+  @HttpCode(HttpStatus.OK)
+  getByEmail(@Body() email: EmailDTO) {
+    return this.userService.findUserByEmail(email);
   }
 
   @Get("/:id")

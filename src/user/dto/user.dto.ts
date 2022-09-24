@@ -32,3 +32,10 @@ export class CreateUserDTO {
 }
 
 export class UpdateUserDTO extends PartialType(CreateUserDTO) { }
+
+export class EmailDTO {
+  @ApiProperty()
+  @IsEmail()
+  @IsNotEmpty()
+  readonly email: string;
+}
