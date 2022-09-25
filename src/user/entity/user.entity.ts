@@ -23,7 +23,7 @@ export class User extends Document {
   modified: Date;
 
   @Prop({ type: Types.ObjectId, ref: Role.name })
-  role: Role | Types.ObjectId;
+  role: Types.ObjectId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

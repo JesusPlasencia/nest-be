@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { Item, ItemSchema } from "src/item/entity/item.entity";
+import { Role, RoleSchema } from "src/role/entity/role.entity";
+import { RoleService } from "src/role/service/role.service";
 import { Summary, SummarySchema } from "src/summary/entity/summary.entity";
 import { SummaryService } from "src/summary/service/summary.service";
 import { OrderController } from "../controller/order.controller";
@@ -20,9 +22,13 @@ import { OrderService } from "../service/order.service";
     {
       name: Summary.name,
       schema: SummarySchema
+    },
+    {
+      name: Role.name,
+      schema: RoleSchema
     }
   ])],
   controllers: [OrderController],
-  providers: [OrderService, SummaryService],
+  providers: [OrderService, SummaryService, RoleService],
 })
 export class OrderModule { }

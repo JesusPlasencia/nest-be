@@ -17,12 +17,12 @@ export class OrderService {
         @InjectModel(Summary.name) private summaryModel: Model<Summary>,
         private summaryService: SummaryService,) { }
 
-    async findAll() {
-        return this.orderModel.find().populate(['user', 'items', 'summary']).exec();
+    async findAll(user: string) {
+        return this.orderModel.find({ user }).populate(['user', 'items', 'summary']).exec();
     }
 
-    async findAllCustom() {
-        const orders = await this.findAll();
+    async findAllCustom(user: string) {
+        const orders = await this.findAll(user);
         const ables = orders.filter(function (o) { return (o.state === true) });
         return ables;
     }

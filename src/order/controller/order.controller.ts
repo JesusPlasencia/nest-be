@@ -8,27 +8,39 @@ import {
     Delete,
     HttpStatus,
     HttpCode,
+    UseGuards,
+    Req
 } from "@nestjs/common";
+import { Request } from 'express';
 import { MongoIdPipe } from "src/common/mongo-id/mongo-id.pipe";
 import { ApiTags } from "@nestjs/swagger";
 import { OrderService } from "../service/order.service";
 import { CreateOrderDTO, UpdateOrderDTO } from "../dto/order.dto";
+import { JwtAuthGuard } from './../../auth/guards/jwt-auth/jwt-auth.guard';
+import { Roles } from "src/auth/decorators/roles/roles.decorator";
+import { Role } from "src/auth/model/roles.model";
+import { RolesGuard } from "src/auth/guards/roles/roles.guard";
+import { PayloadToken } from "src/auth/model/token.model";
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags("orders")
 @Controller("orders")
 export class OrderController {
     constructor(private orderService: OrderService) { }
 
+    @Roles(Role.CUSTOMER)
     @Get()
     @HttpCode(HttpStatus.OK)
-    get() {
-        return this.orderService.findAll();
+    get(@Req() req: Request) {
+        const user = req.user as PayloadToken;
+        return this.orderService.findAll(user.sub.toString());
     }
 
     @Get("/custom")
     @HttpCode(HttpStatus.OK)
-    getByFilter() {
-        return this.orderService.findAllCustom();
+    getByFilter(@Req() req: Request) {
+        const user = req.user as PayloadToken;
+        return this.orderService.findAllCustom(user.sub.toString());
     }
 
     @Get("/:id")

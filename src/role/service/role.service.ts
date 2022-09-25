@@ -14,7 +14,7 @@ export class RoleService {
     }
 
     async findById(id: string) {
-        const role = await this.roleModel.findById(id);
+        const role = await this.roleModel.findById(id).exec();
         if (!role) {
             throw new NotFoundException("Role Not Available.");
         }
