@@ -13,9 +13,9 @@ const API_KEY = "1245354";
       {
         useFactory: async (configService: ConfigType<typeof config>) => {
           //Vars
-          const { connection, dbName, host, password, port, user } = configService.mongo;
+          const { connection, dbName, host, password, user } = configService.mongo;
           return {
-            uri: `${connection}://${host}:${port}`,
+            uri: `${connection}://${host}`,
             user,
             pass: password,
             dbName
@@ -33,8 +33,8 @@ const API_KEY = "1245354";
     {
       provide: 'MONGO',
       useFactory: async (configService: ConfigType<typeof config>) => {
-        const { connection, dbName, host, password, port, user } = configService.mongo;
-        const uri = `${connection}://${user}:${password}@${host}:${port}/?directConnection=true&authMechanism=DEFAULT`;
+        const { connection, dbName, host, password, user } = configService.mongo;
+        const uri = `${connection}://${user}:${password}@${host}/?directConnection=true&authMechanism=DEFAULT`;
         const client = new MongoClient(uri);
         await client.connect();
 
