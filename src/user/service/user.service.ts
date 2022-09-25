@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import * as bcrypt from 'bcrypt'
 import { User } from "../entity/user.entity";
@@ -32,6 +32,14 @@ export class UserService {
     const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new NotFoundException("User Not Found.");
+    }
+    return user;
+  }
+
+  async findUserByUsername(username: string) {
+    const user = await this.userModel.findOne({ username });
+    if (!user) {
+      throw new UnauthorizedException("User or Password are incorrect. Try again.");
     }
     return user;
   }

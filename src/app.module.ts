@@ -19,6 +19,8 @@ import { SummaryModule } from "./summary/module/summary.module";
 import { DatabaseModule } from "./database/module/database.module";
 import { environments } from "./environment";
 import { AuthModule } from './auth/module/auth.module';
+import { AuthService } from './auth/services/auth.service';
+import { AuthController } from './auth/controller/auth.controller';
 import config from "./config";
 
 @Module({
@@ -60,7 +62,7 @@ import config from "./config";
         return tasks;
       },
       inject: [HttpService],
-    },
+    }
   ],
 })
 export class AppModule { }

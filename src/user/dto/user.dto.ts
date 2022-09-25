@@ -39,3 +39,15 @@ export class EmailDTO {
   @IsNotEmpty()
   readonly email: string;
 }
+
+export class LoginDTO {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly username: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly password: string;
+}
